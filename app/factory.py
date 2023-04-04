@@ -1,6 +1,7 @@
 import inspect
 
 import factory
+from asgiref.sync import sync_to_async
 from django.db import IntegrityError
 from factory import errors
 from factory.builder import BuildStep, StepBuilder, parse_declarations
@@ -83,7 +84,10 @@ class AsyncFactory(factory.django.DjangoModelFactory):
         """Save again the instance if creating and at least one hook ran."""
         if create and results:
             # Some post-generation hooks ran, and may have modified us.
-            await instance.asave()
+            if hasattr(instance, "asave"):
+                await instance.asave()
+            else:
+                await sync_to_async(instance.save)()
 
 
 class AsyncBuildStep(BuildStep):

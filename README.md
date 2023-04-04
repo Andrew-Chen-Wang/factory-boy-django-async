@@ -2,6 +2,8 @@
 
 Using Factory Boy with Django ORM and asyncio.
 
+Gist to bookmark for quicksave: https://gist.github.com/Andrew-Chen-Wang/59d784496c63ee65714b926d6945b4c6
+
 View the implementation code at [app/factory](./app/factory)
 
 View test code at [main.py](./main.py) in the root of the source tree
