@@ -19,19 +19,24 @@ import django
 
 
 django.setup()
-
-# Import your models for use in your script
-from app.models import *
-
-
 ############################################################################
 ## START OF APPLICATION
 ############################################################################
-""" Replace the code below with your own """
+import asyncio  # noqa
 
-# Seed a few users in the database
-User.objects.create(name="Dan")
-User.objects.create(name="Robert")
+from app.factories import FriendFactory, ProfileFactory  # noqa
+from app.models import Friend, Profile  # noqa
 
-for u in User.objects.all():
-    print(f"ID: {u.id} \tUsername: {u.name}")
+
+async def main():
+    friends = await FriendFactory.create_batch(10)
+    assert await Friend.objects.acount() == 10
+    await ProfileFactory.create(user=friends[0].user)
+    assert await Profile.objects.acount() == 1
+    built_profile = await ProfileFactory.build()
+    assert built_profile.pk is None
+    assert await Profile.objects.acount() == 1
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

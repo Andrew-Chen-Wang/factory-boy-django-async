@@ -1,24 +1,28 @@
-# Django ORM Template
+# Factory Boy Django Async
 
-A GitHub template to quickly get a Python project
-that needs an awesome ORM up and running.
-This repository is a quick template repository
-that I personally use.
+Using Factory Boy with Django ORM and asyncio.
 
-Original intended usage is to script from main.py
-and call management commands through manage.py
+Gist to bookmark for quicksave: https://gist.github.com/Andrew-Chen-Wang/59d784496c63ee65714b926d6945b4c6
 
-To run tests, run `pytest tests/`
+View the implementation code at [app/factory](./app/factory)
 
-Includes support for:
-- Either SQLite or PostgreSQL
-- Docker
-- Pre-commit
+View test code at [main.py](./main.py) in the root of the source tree
 
-This repository is performing:
-- Unittests to upgrade Django fast
+<details>
+<summary>Or click this dropdown</summary>
+
+```python
+```
+
+</details>
 
 ### Credit and License
+
+Initial code for factory boy from: From https://github.com/FactoryBoy/factory_boy/issues/679#issuecomment-995289117
+
+Initial code for factory boy by: [@KharchenkoDmitriy](https://github.com/KharchenkoDmitriy)
+
+Factory Boy Django async code by: [@Andrew-Chen-Wang](https://github.com/Andrew-Chen-Wang)
 
 This repository was generated with [Andrew-Chen-Wang/django-orm-template](https://github.com/Andrew-Chen-Wang/django-orm-template)
 
