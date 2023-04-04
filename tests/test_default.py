@@ -4,7 +4,7 @@ from app.factories import FriendFactory, ProfileFactory
 from app.models import Friend, Profile
 
 
-pytestmark = [pytest.mark.django_db(transaction=True)]
+pytestmark = [pytest.mark.django_db(transaction=True), pytest.mark.asyncio]
 
 
 async def test_creation():

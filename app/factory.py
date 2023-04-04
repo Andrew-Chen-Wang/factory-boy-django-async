@@ -7,6 +7,18 @@ from factory import errors
 from factory.builder import BuildStep, StepBuilder, parse_declarations
 
 
+def use_postgeneration_results(self, step, instance, results):
+    """Add a return so that we can await it if necessary"""
+    return self.factory._after_postgeneration(
+        instance,
+        create=step.builder.strategy == factory.enums.CREATE_STRATEGY,
+        results=results,
+    )
+
+
+factory.base.FactoryOptions.use_postgeneration_results = use_postgeneration_results
+
+
 class AsyncFactory(factory.django.DjangoModelFactory):
     @classmethod
     async def _generate(cls, strategy, params):
@@ -132,11 +144,13 @@ class AsyncStepBuilder(StepBuilder):
 
         args, kwargs = self.factory_meta.prepare_arguments(step.attributes)
 
-        instance = await self.factory_meta.instantiate(
+        instance = self.factory_meta.instantiate(
             step=step,
             args=args,
             kwargs=kwargs,
         )
+        if inspect.isawaitable(instance):
+            instance = await instance
 
         postgen_results = {}
         for declaration_name in post.sorted():
@@ -150,9 +164,11 @@ class AsyncStepBuilder(StepBuilder):
                 declaration_result = await declaration_result
             postgen_results[declaration_name] = declaration_result
 
-        self.factory_meta.use_postgeneration_results(
+        postgen = self.factory_meta.use_postgeneration_results(
             instance=instance,
             step=step,
             results=postgen_results,
         )
+        if inspect.isawaitable(postgen):
+            await postgen
         return instance

@@ -29,13 +29,17 @@ from app.models import Friend, Profile  # noqa
 
 
 async def main():
+    orig = await Friend.objects.acount()
     friends = await FriendFactory.create_batch(10)
-    assert await Friend.objects.acount() == 10
+    assert await Friend.objects.acount() == 10 + orig
+
+    orig = await Profile.objects.acount()
     await ProfileFactory.create(user=friends[0].user)
-    assert await Profile.objects.acount() == 1
+    assert await Profile.objects.acount() == 1 + orig
+
     built_profile = await ProfileFactory.build()
     assert built_profile.pk is None
-    assert await Profile.objects.acount() == 1
+    assert await Profile.objects.acount() == 1 + orig
 
 
 if __name__ == "__main__":
