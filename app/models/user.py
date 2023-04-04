@@ -1,5 +1,3 @@
-import sys
-
 from django.db import models
 
 
@@ -9,3 +7,15 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+class Friend(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends")
+    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends_of")
+
+    class Meta:
+        unique_together = ("user", "friend")

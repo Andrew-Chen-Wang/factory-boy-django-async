@@ -19,19 +19,47 @@ import django
 
 
 django.setup()
-
-# Import your models for use in your script
-from app.models import *
-
-
 ############################################################################
 ## START OF APPLICATION
 ############################################################################
-""" Replace the code below with your own """
+import asyncio
 
-# Seed a few users in the database
-User.objects.create(name="Dan")
-User.objects.create(name="Robert")
+from app.models import User, Friend, Profile
+from app.factory.declarations import SubFactory
+from app.factory.faker import Faker
+from app.factory.django import DjangoModelFactory
 
-for u in User.objects.all():
-    print(f"ID: {u.id} \tUsername: {u.name}")
+
+class UserFactory(DjangoModelFactory):
+    name = Faker("name")
+
+    class Meta:
+        model = User
+
+
+class ProfileFactory(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+
+    class Meta:
+        model = Profile
+
+
+class FriendFactory(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+    friend = SubFactory(UserFactory)
+
+    class Meta:
+        model = Friend
+
+
+async def main():
+    friends = await FriendFactory.acreate_batch(10)
+    await ProfileFactory.create(user=friends[0].user)
+    assert await Profile.objects.acount() == 1
+    built_profile = await ProfileFactory.build()
+    assert built_profile.pk is None
+    assert await Profile.objects.acount() == 1
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
