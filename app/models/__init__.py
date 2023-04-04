@@ -1,1 +1,1 @@
-from .user import User, Profile, Friend
+from .user import Friend, Profile, User

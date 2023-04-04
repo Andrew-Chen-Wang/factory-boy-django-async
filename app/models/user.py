@@ -15,7 +15,9 @@ class Profile(models.Model):
 
 class Friend(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends")
-    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends_of")
+    friend = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="friends_of"
+    )
 
     class Meta:
         unique_together = ("user", "friend")
